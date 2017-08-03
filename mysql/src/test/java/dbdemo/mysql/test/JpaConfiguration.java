@@ -2,6 +2,8 @@ package dbdemo.mysql.test;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -10,6 +12,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
@@ -21,8 +24,11 @@ import java.util.Properties;
  * @Date: Created in 上午11:33 17-7-31.
  * @Modified:
  */
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Configuration
+@EnableTransactionManagement(proxyTargetClass = true)
 @EnableJpaRepositories(basePackages = "dbdemo.**.repository")
+//@EntityScan(basePackages = "dbdemo.**.entity")
 public class JpaConfiguration {
 
     @Bean
@@ -67,6 +73,7 @@ public class JpaConfiguration {
         hibernateProperties.setProperty("hibernate.show_sql", "true");
         hibernateProperties.setProperty("hibernate.use_sql_comments", "false");
         hibernateProperties.setProperty("hibernate.format_sql", "true");
+        //注意：hibernate为5.x版本的情况下，该属性为update时提示创建表失败
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
         hibernateProperties.setProperty("hibernate.generate_statistics", "false");
         hibernateProperties.setProperty("javax.persistence.validation.mode", "none");

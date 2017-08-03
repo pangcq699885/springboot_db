@@ -27,7 +27,7 @@ public class User implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "did")
-    @JsonBackReference
+    @JsonBackReference//用来防止关系对象的递归访问
     private Department department;
 
     @ManyToMany(cascade = {}, fetch = FetchType.EAGER)
